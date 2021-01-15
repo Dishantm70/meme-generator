@@ -1,0 +1,148 @@
+{% verbatim %}
+<html lang="en" >
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Angular Material style sheet -->
+  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.12/angular-material.min.css">
+</head>
+<body ng-app="BlankApp" ng-cloak>
+   <div ng-controller="testController">
+    <div ng-if="state == 'MEMES'">
+    <md-content class="md-padding" layout-xs="column" layout="row">
+    <div flex-xs flex-gt-xs="50" layout="column">
+      <md-card ng-repeat="meme in memes" md-theme="{{ showDarkTheme ? 'dark-grey' : 'default' }}" md-theme-watch>
+        <md-card-title>
+          <md-card-title-text>
+            <span class="md-headline">{{meme.name}}</span>
+          </md-card-title-text>
+          <md-card-title-media>
+            <div class="md-media-lg card-media">
+            </div>
+              <img src="{{meme.url}}" height="{{meme.height}}" width="{{meme.width}}">
+          </md-card-title-media>
+
+        </md-card-title>
+      </md-card>
+    </div>
+  </md-content>
+        Hi {{user_data.username}}, your session cookie is: {{ user_data.session_cookie }}.
+    </div>
+   <div ng-if="state == 'LOGIN'">
+     <md-content md-theme="docs-dark" layout-gt-sm="row" layout-padding>
+        <form name="loginForm" >
+      <md-input-container>
+        <label>Username</label>
+        <input required ng-model="loginForm.username">
+      </md-input-container>
+      <md-input-container>
+        <label>Password</label>
+        <input type="password" required ng-model="loginForm.password">
+      </md-input-container>
+           <br>
+                 {{error}}
+      <br>
+           <md-button class="md-raised md-primary" ng-disabled="loginForm.$invalid" ng-click="loginUser(loginForm.username, loginForm.password)">Login</md-button>
+        </form>
+  </md-content>
+   </div>
+      <div ng-if="state == 'COOKIE_CONSENT'">
+         Hi {{user_data.username}}, your session cookie is: {{ user_data.session_cookie }}.
+         <br>
+         This website collects cookies. Please accept the terms and conditions by pressing the ACCEPT button to continue viewing memes.
+         <br>
+         <md-button class="md-raised md-primary" ng-click="acceptCookies()">Accept</md-button>
+         <md-button class="md-raised" ng-click="denyCookies()">Deny</md-button>
+      </div>
+   </div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.6/angular.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.6/angular-animate.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.6/angular-aria.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.6/angular-messages.min.js"></script>
+
+  <!-- Angular Material Library -->
+  <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.12/angular-material.min.js"></script>
+
+  <!-- Your application bootstrap  -->
+  <script type="text/javascript">
+    app = angular.module('BlankApp', ['ngMaterial', 'ngMessages']);
+    app.controller("testController", function($scope, $http) {
+      $scope.state = "LOGIN";
+      $scope.error = "";
+      $scope.user_data = null;
+      $scope.memes = null;
+      $scope.loginUser = function(username, password) {
+         $http.post("/api/v1/users/login/", {"username": username, "password": password}).then(
+         function successCallback(response) {
+            $scope.get_user_data().then(
+            function(data)
+            {
+            $scope.user_data = data.data
+            if($scope.user_data.cookie_consent_accepted){
+               $scope.state = "MEMES";
+                $scope.get_memes().then(
+                    function(data){
+                    $scope.memes = data.data}
+                );
+               }
+            else{
+               $scope.state = "COOKIE_CONSENT";
+            }
+            }
+            );
+
+         },
+         function errorCallback(response) {
+           alert(response.data.message);
+         }
+       );
+      }
+      $scope.acceptCookies = function() {
+         $http.patch("/api/v1/users/profile/", {"cookie_consent_accepted": true}).then(
+         function successCallback(response) {
+            $scope.user_data = response.data;
+            if($scope.user_data.cookie_consent_accepted){
+               $scope.state = "MEMES"
+               }
+            else{
+               $scope.state = "COOKIE_CONSENT";
+            }
+         }
+       );
+      }
+      $scope.denyCookies = function() {
+        alert("Sorry. We cannot let you view the memes if you don't provide consent for cookies. Press ok to logout.")
+        $http.get("/api/v1/users/logout/");
+        window.location.reload();
+      }
+      $scope.get_user_data = function() {
+         return $http.get("/api/v1/users/profile/");
+      }
+      $scope.get_memes = function() {
+         return $http.get("/api/v1/memes/");
+      }
+      (function () {
+        $http.get("/api/v1/users/profile/").then(
+            function(data){
+              $scope.user_data = data.data
+            if($scope.user_data.cookie_consent_accepted){
+               $scope.state = "MEMES";
+                $http.get("/api/v1/memes/").then(
+                    function(data){
+                    $scope.memes = data.data}
+                );
+               }
+            else{
+               $scope.state = "COOKIE_CONSENT";
+            }
+            }
+        );
+
+      }());
+    }
+    )
+  </script>
+
+</body>
+</html>
+{% endverbatim %}
