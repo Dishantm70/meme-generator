@@ -18,7 +18,7 @@ from django.urls import path, include
 from meme_generator import views
 
 urlpatterns = [
-    path('', views.homeView, name='home'),
-    path('api/v1/users/', include('user.urls')),
-    path('api/v1/memes/', include('memes.urls')),
+    path('', views.indexView, name='index'), # renders index.html
+    path('api/v1/users/', include('user.urls')), # user signup, login, profile related endpoints
+    path('api/v1/memes/', include('memes.urls')), # generates random memes for users
 ]

@@ -28,7 +28,6 @@ class UserView(APIView):
 
     def put(self, request):
         user_instance = request.user
-
         serializer = self.serializer_class(user_instance, data=request.data, context={"request": request})
         serializer.is_valid(raise_exception=True)
         serializer.save()
@@ -37,7 +36,6 @@ class UserView(APIView):
 
     def patch(self, request):
         user_instance = request.user
-
         serializer = self.serializer_class(user_instance, data=request.data, partial=True, context={"request": request})
         serializer.is_valid(raise_exception=True)
         serializer.save()
