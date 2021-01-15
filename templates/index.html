@@ -1,70 +1,86 @@
 {% verbatim %}
-<html lang="en" >
+<html lang="en">
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- Angular Material style sheet -->
-  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.12/angular-material.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Angular Material style sheet -->
+    <link rel="stylesheet"
+          href="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.12/angular-material.min.css">
 </head>
 <body ng-app="BlankApp" ng-cloak>
-   <div ng-controller="testController">
-    <div ng-if="state == 'MEMES'">
-    <md-content class="md-padding" layout-xs="column" layout="row">
-    <div flex-xs flex-gt-xs="50" layout="column">
-      <md-card ng-repeat="meme in memes" md-theme="{{ showDarkTheme ? 'dark-grey' : 'default' }}" md-theme-watch>
-        <md-card-title>
-          <md-card-title-text>
-            <span class="md-headline">{{meme.name}}</span>
-          </md-card-title-text>
-          <md-card-title-media>
-            <div class="md-media-lg card-media">
+<div ng-controller="testController">
+    <div layout="column" layout-fill="">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2 md-truncate="" flex="">Meme Generator!</h2>
+                <md-button ng-if="state != 'LOGIN'" ng-click="logout()">
+                    Logout
+                </md-button>
             </div>
-              <img src="{{meme.url}}" height="{{meme.height}}" width="{{meme.width}}">
-          </md-card-title-media>
+        </md-toolbar>
+        <div ng-if="state == 'MEMES'">
+<md-grid-list
+        md-cols-xs="1" md-cols-sm="2" md-cols-md="4" md-cols-gt-md="6"
+        md-row-height-gt-md="1:1" md-row-height="2:2"
+        md-gutter="12px" md-gutter-gt-sm="8px" >
 
-        </md-card-title>
-      </md-card>
+    <md-grid-tile md-rowspan="2" md-colspan="2" md-colspan-sm="1" md-colspan-xs="1" ng-repeat="meme in memes" style="padding-top: 24px !important;">
+      <img src="{{meme.url}}" style="object-fit: cover; height: inherit; width: inherit;">
+        <md-grid-tile-footer>
+        <h3>{{meme.name}}</h3>
+      </md-grid-tile-footer>
+    </md-grid-tile>
+
+    </md-grid-list>
+            Hi {{user_data.username}}, your session cookie is: {{ user_data.session_cookie }}.
+        </div>
+        <div ng-if="state == 'LOGIN'">
+            <md-card class="box">
+                <md-card-header>
+                    <md-card-title>Log in</md-card-title>
+                </md-card-header>
+                <md-content md-theme="docs-dark" layout-gt-sm="row" layout-padding>
+                    <form name="loginForm" class="example-form">
+                        <md-input-container>
+                            <label>Username</label>
+                            <input required ng-model="loginForm.username">
+                        </md-input-container>
+                        <md-input-container>
+                            <label>Password</label>
+                            <input type="password" required ng-model="loginForm.password">
+                        </md-input-container>
+                        <br>
+                        {{error}}
+                        <br>
+                        <md-button class="md-raised md-primary" ng-disabled="loginForm.$invalid"
+                                   ng-click="loginUser(loginForm.username, loginForm.password)">Login
+                        </md-button>
+                    </form>
+                </md-content>
+            </md-card>
+        </div>
+        <div ng-if="state == 'COOKIE_CONSENT'">
+            Hi {{user_data.username}}, your session cookie is: {{ user_data.session_cookie }}.
+            <br>
+            This website collects cookies. Please accept the terms and conditions by pressing the ACCEPT button to
+            continue
+            viewing memes.
+            <br>
+            <md-button class="md-raised md-primary" ng-click="acceptCookies()">Accept</md-button>
+            <md-button class="md-raised" ng-click="denyCookies()">Deny</md-button>
+        </div>
     </div>
-  </md-content>
-        Hi {{user_data.username}}, your session cookie is: {{ user_data.session_cookie }}.
-    </div>
-   <div ng-if="state == 'LOGIN'">
-     <md-content md-theme="docs-dark" layout-gt-sm="row" layout-padding>
-        <form name="loginForm" >
-      <md-input-container>
-        <label>Username</label>
-        <input required ng-model="loginForm.username">
-      </md-input-container>
-      <md-input-container>
-        <label>Password</label>
-        <input type="password" required ng-model="loginForm.password">
-      </md-input-container>
-           <br>
-                 {{error}}
-      <br>
-           <md-button class="md-raised md-primary" ng-disabled="loginForm.$invalid" ng-click="loginUser(loginForm.username, loginForm.password)">Login</md-button>
-        </form>
-  </md-content>
-   </div>
-      <div ng-if="state == 'COOKIE_CONSENT'">
-         Hi {{user_data.username}}, your session cookie is: {{ user_data.session_cookie }}.
-         <br>
-         This website collects cookies. Please accept the terms and conditions by pressing the ACCEPT button to continue viewing memes.
-         <br>
-         <md-button class="md-raised md-primary" ng-click="acceptCookies()">Accept</md-button>
-         <md-button class="md-raised" ng-click="denyCookies()">Deny</md-button>
-      </div>
-   </div>
+</div>
 
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.6/angular.min.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.6/angular-animate.min.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.6/angular-aria.min.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.6/angular-messages.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.6/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.6/angular-animate.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.6/angular-aria.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.6/angular-messages.min.js"></script>
 
-  <!-- Angular Material Library -->
-  <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.12/angular-material.min.js"></script>
+    <!-- Angular Material Library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.12/angular-material.min.js"></script>
 
-  <!-- Your application bootstrap  -->
-  <script type="text/javascript">
+    <!-- Your application bootstrap  -->
+    <script type="text/javascript">
     app = angular.module('BlankApp', ['ngMaterial', 'ngMessages']);
     app.controller("testController", function($scope, $http) {
         $scope.state = "LOGIN";
@@ -110,13 +126,18 @@
                 }
             );
         }
-        $scope.denyCookies = function() {
-            alert("Sorry. We cannot let you view the memes if you don't provide consent for cookies. Press ok to logout.")
+        $scope.logout = function() {
             $http.get("/api/v1/users/logout/");
             window.location.reload();
         }
+        $scope.denyCookies = function() {
+            alert("Sorry. We cannot let you view the memes if you don't provide consent for cookies. Press ok to logout.")
+            $scope.logout();
+        }
     })
-  </script>
+
+
+    </script>
 </body>
 </html>
 {% endverbatim %}
