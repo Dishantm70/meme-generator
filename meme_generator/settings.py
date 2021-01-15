@@ -80,12 +80,24 @@ WSGI_APPLICATION = 'meme_generator.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if os.environ.get('env', '') == 'PROD':
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.environ.get('DJANGO_APP_DB_NAME'),
+            'USER': os.environ.get('DJANGO_APP_DB_USER'),
+            'PASSWORD': os.environ.get('DJANGO_APP_DB_PASSWORD'),
+            'HOST': os.environ.get('DJANGO_APP_DB_HOST'),
+            'PORT': int(os.environ.get('DJANGO_APP_DB_PORT'))
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 
 # Password validation
