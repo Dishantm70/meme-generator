@@ -67,52 +67,55 @@
   <script type="text/javascript">
     app = angular.module('BlankApp', ['ngMaterial', 'ngMessages']);
     app.controller("testController", function($scope, $http) {
-      $scope.state = "LOGIN";
-      $scope.error = "";
-      $scope.user_data = null;
-      $scope.memes = null;
-      $scope.loginUser = function(username, password) {
-         $http.post("/api/v1/users/login/", {"username": username, "password": password}).then(
-         function successCallback(response) {
-         window.location.reload();
-         },
-         function errorCallback(response) {
-           alert(response.data.message);
-         }
-       );
-      }
-      $scope.acceptCookies = function() {
-         $http.patch("/api/v1/users/profile/", {"cookie_consent_accepted": true}).then(
-         function successCallback(response) {
-            window.location.reload();
-         }
-       );
-      }
-      $scope.denyCookies = function() {
-        alert("Sorry. We cannot let you view the memes if you don't provide consent for cookies. Press ok to logout.")
-        $http.get("/api/v1/users/logout/");
-        window.location.reload();
-      }
-      (function () {
-        $http.get("/api/v1/users/profile/").then(
-            function(data){
-              $scope.user_data = data.data
-            if($scope.user_data.cookie_consent_accepted){
-               $scope.state = "MEMES";
-                $http.get("/api/v1/memes/").then(
-                    function(data){
-                    $scope.memes = data.data}
-                );
-               }
-            else{
-               $scope.state = "COOKIE_CONSENT";
-            }
-            }
-        );
+        $scope.state = "LOGIN";
+        $scope.user_data = null;
+        $scope.memes = null;
+        (function() {
+            $http.get("/api/v1/users/profile/").then(
+                function(data) {
+                    $scope.user_data = data.data
+                    if ($scope.user_data.cookie_consent_accepted) {
+                        $scope.state = "MEMES";
+                        $http.get("/api/v1/memes/").then(
+                            function(data) {
+                                $scope.memes = data.data
+                            }
+                        );
+                    } else {
+                        $scope.state = "COOKIE_CONSENT";
+                    }
+                }
+            );
 
-      }());
-    }
-    )
+        }());
+        $scope.loginUser = function(username, password) {
+            $http.post("/api/v1/users/login/", {
+                "username": username,
+                "password": password
+            }).then(
+                function successCallback(response) {
+                    window.location.reload();
+                },
+                function errorCallback(response) {
+                    alert(response.data.message);
+                }
+            );
+        }
+        $scope.acceptCookies = function() {
+            $http.patch("/api/v1/users/profile/", {
+                "cookie_consent_accepted": true
+            }).then(
+                function successCallback(response) {
+                    window.location.reload();
+                }
+            );
+        }
+        $scope.denyCookies = function() {
+            alert("Sorry. We cannot let you view the memes if you don't provide consent for cookies. Press ok to logout.")
+            $http.get("/api/v1/users/logout/");
+            window.location.reload();
+        }
+    })
   </script>
 </body>
 </html>
