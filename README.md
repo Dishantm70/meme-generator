@@ -15,4 +15,4 @@
 
 - Local development uses sqlite3 database and the deployed application uses Cloud SQL(Postgres 12) database.
 
-- Continuous deployment has been set and integrated with Github using Google Cloud Build. The latest code on "main" branch gets deployed to Google Cloud RUn automatically.
+- Continuous deployment has been set and integrated with Github using Google Cloud Build. The latest code on "main" branch gets deployed to Google Cloud Run automatically whenever a change is pushed.
