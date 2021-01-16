@@ -5,6 +5,8 @@
 2. Migrate the database: `./manage.py migrate`
 3. Run local server on poer 8000: `./manage.py runserver`
 
+## Notes
+
 - The app generates 5 random memes every time you refresh the page after logging in and accepting cookies.
 
 - The backend is built with Django Rest Framework. The documentation for all APIs can be found on [This link](https://documenter.getpostman.com/view/9395373/TVzVhaqG).
@@ -13,4 +15,4 @@
 
 - Local development uses sqlite3 database and the deployed application uses Cloud SQL(Postgres 12) database.
 
-- Continuous deployment has been set and integrated with Github using Google Cloud Build. The latest code on "main" branch gets deployed to Google Cloud RUn automatically.
+- Continuous deployment has been set and integrated with Github using Google Cloud Build. The latest code on "main" branch gets deployed to Google Cloud Run automatically whenever a change is pushed.
