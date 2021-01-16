@@ -5,6 +5,32 @@
     <!-- Angular Material style sheet -->
     <link rel="stylesheet"
           href="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.12/angular-material.min.css">
+    <style>
+        .cookie-banner {
+          position: fixed;
+          left: 10%;
+          right: 10%;
+          width: 80%;
+          padding: 5px 14px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          background-color: #eee;
+          border-radius: 5px;
+          box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.2);
+        }
+        .close {
+          height: 20px;
+          background-color: #777;
+          border: none;
+          color: white;
+          border-radius: 2px;
+          cursor: pointer;
+        }
+        #hidethis { animation: css 0s 5s forwards; }
+
+        @keyframes css  { to { visibility: hidden; } }
+    </style>
 </head>
 <body ng-app="BlankApp" ng-cloak>
 <div ng-controller="testController">
@@ -31,7 +57,9 @@
     </md-grid-tile>
 
     </md-grid-list>
-            Hi {{user_data.username}}, your session cookie is: {{ user_data.session_cookie }}.
+            <div class="cookie-banner" style="bottom: 40px" id="hidethis">
+                Hi {{user_data.username}}, you have provided consent for cookies. Your session cookie is: {{ user_data.session_cookie }}.
+            </div>
         </div>
         <div ng-if="state == 'LOGIN'">
             <md-card class="box">
@@ -59,14 +87,16 @@
             </md-card>
         </div>
         <div ng-if="state == 'COOKIE_CONSENT'">
-            Hi {{user_data.username}}, your session cookie is: {{ user_data.session_cookie }}.
-            <br>
-            This website collects cookies. Please accept the terms and conditions by pressing the ACCEPT button to
-            continue
-            viewing memes.
-            <br>
-            <md-button class="md-raised md-primary" ng-click="acceptCookies()">Accept</md-button>
-            <md-button class="md-raised" ng-click="denyCookies()">Deny</md-button>
+            <div class="cookie-banner" style="top: 100px">
+                <p>
+                    Hi {{user_data.username}}, your session cookie is: <b>{{ user_data.session_cookie }}.</b><br><br>
+                    This website collects cookies. Please accept the terms and conditions by pressing the ACCEPT button to
+                    continue
+                    viewing memes.
+                </p>
+                <md-button class="md-raised md-primary" ng-click="acceptCookies()">Accept</md-button>
+                <md-button class="md-raised" ng-click="denyCookies()">Deny</md-button>
+            </div>
         </div>
     </div>
 </div>

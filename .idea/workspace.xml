@@ -2,9 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3abc996a-518a-471d-b828-fac7aee3fc08" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/meme_generator/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/meme_generator/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/meme_generator/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/meme_generator/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/user/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/index.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
