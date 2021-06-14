@@ -1,0 +1,40 @@
+name: Deploy
+on:
+  push:
+    branches:
+    - main
+env:
+  GKE_PROJECT: ${{ secrets.GKE_PROJECT }}
+  GITHUB_VERSION: 1.2.3
+  GKE_ZONE: ${{ secrets.GKE_ZONE }}
+  GKE_CLUSTER: ${{ secrets.GKE_CLUSTER }}
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - uses: google-github-actions/setup-gcloud@v0.2.0
+      with:
+        service_account_key: ${{ secrets.GKE_SA_KEY }}
+        project_id: ${{ secrets.GKE_PROJECT }}
+    - run: |-
+        gcloud --quiet auth configure-docker
+    - uses: google-github-actions/get-gke-credentials@v0.2.1
+      with:
+        cluster_name: ${{ env.GKE_CLUSTER }}
+        location: ${{ env.GKE_ZONE }}
+        credentials: ${{ secrets.GKE_SA_KEY }}
+    - name: Build
+      run: |        
+        docker build -t gcr.io/$GKE_PROJECT/frontend:$GITHUB_VERSION frontend
+        docker build -t gcr.io/$GKE_PROJECT/backend:$GITHUB_VERSION backend
+    - name: Publish
+      run: |
+        docker push gcr.io/$GKE_PROJECT/frontend:$GITHUB_VERSION
+        docker push gcr.io/$GKE_PROJECT/backend:$GITHUB_VERSION
+    - name: Deploy
+      run: |
+        kubectl set image deployment/backend backend=gcr.io/$GKE_PROJECT/backend:$GITHUB_VERSION
+        kubectl set image deployment/frontend frontend=gcr.io/$GKE_PROJECT/frontend:$GITHUB_VERSION
